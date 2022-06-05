@@ -1,0 +1,370 @@
+<div id="main-container">
+  <br>
+</div>
+<div class="divTable">
+  <button type="button" *ngIf="showUserBoard" style="background-color:#FFB703;font-weight: bold;" class="btn" data-bs-toggle="modal"
+    data-bs-target="#exampleModal">
+    Ajouter une formation
+  </button>
+</div>
+<br><br>
+<!--primfaces-->
+<div class="divTable">
+  <p-table id="customers" [columns]="cols" [value]="formations" sortMode="multiple" #dt [paginator]="true" [rows]="5">
+    <ng-template style="background-color: #8ECAE6;" pTemplate="caption">
+      <b style="color:#fb8500;font-weight: bold; font-size: 30px;">Liste des formations</b>
+    </ng-template>
+
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th scope="col" *ngFor="let col of columns" [pSortableColumn]="col.field">
+          {{col.header}}
+          <p-sortIcon style="color:#fb8500;" [field]="col.field"></p-sortIcon>
+        </th>
+        <th *ngIf="showUserBoard">Session
+
+        </th>
+        <th>Details formation
+
+        </th>
+        <th *ngIf="showUserBoard">Modifier
+        </th>
+        <th *ngIf="showUserBoard">Supprimer </th>
+      
+      </tr>
+
+      <tr>
+        <th *ngFor="let col of columns" [ngSwitch]="col.field">
+          <input pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+        </th>
+        <th *ngIf="showUserBoard" style="text-align:center">
+          <p style="color: #ffb703;">
+           ajouter session
+          </p>
+        <!--   <mat-icon class="icon">remove_red_eye</mat-icon> -->
+        </th>
+        <th  style="text-align:center">
+         <!--  <mat-icon class="icon">remove_red_eye</mat-icon> -->
+        </th>
+        <th  *ngIf="showUserBoard" style="text-align:center">
+          <!-- <mat-icon class="icon">edit</mat-icon> -->
+        </th>
+        <th  *ngIf="showUserBoard" style="text-align:center">
+         <!--  <p>
+            <mat-icon class="icon">delete_forever</mat-icon>
+          </p> -->
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-formation let-columns="columns">
+      <tr>
+        <td *ngFor="let col of columns">
+          {{formation[col.field]}}
+        </td>
+        <td align="center" *ngIf="showUserBoard">  <button
+          (click) = "formationById(formation.id)" 
+           class="btn btn-info" style="margin-left: 2%;background-color: #219ebc;"><mat-icon
+           style="color: #ffb703;" >location_city</mat-icon></button></td>
+           
+        <td align="center">
+          <a (click)="onOpenModal(formation, 'details')" style="background-color: #023047; text-align: center;
+      
+        justify-content: center;" class="btn  tooltips" data-placement="top" data-original-title="Delete">
+            <mat-icon class="icon">remove_red_eye</mat-icon>
+          </a>
+        </td>
+        <td align="center" *ngIf="showUserBoard">
+          <a (click)="onOpenModal(formation, 'edit')" style="background-color: #023047; text-align: center;
+      
+        justify-content: center;" class="btn  tooltips" data-placement="top" data-original-title="Delete">
+            <mat-icon class="icon">edit</mat-icon>
+          </a>
+        </td >
+        <td *ngIf="showUserBoard" align="center">
+          <a (click)="onOpenModal(formation, 'delete')" style="background-color: #023047; text-align: center;
+      
+        justify-content: center;" class="btn  tooltips" data-placement="top" data-original-title="Delete">
+            <mat-icon class="icon">delete_forever</mat-icon>
+          </a>
+        </td>
+        
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+
+<!--  Modal -->
+<div class="modal fade" id="exampleModal" style="z-index: 999999999;" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color:#219EBC;" id="exampleModalLabel">Ajouter une formation</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <form #addForm="ngForm" (ngSubmit)="onAddFormation(addForm)">
+          <div class="form-group">
+            <label style="color:#219EBC;" for="titre">Titre de formation</label>
+            <input type="text" ngModel name="titre" class="form-control" id="titre" placeholder="titre" required>
+          </div>
+          <div class="form-group">
+            <label style="color:#219EBC;" for="annee">Annee</label>
+            <input type="number" ngModel name="annee" class="form-control" id="annee" placeholder="annee" required>
+          </div>
+          <div class="form-group">
+            <label style="color:#219EBC;" for="duree">Duree</label>
+            <input type="number" ngModel name="duree" class="form-control" id="duree" placeholder="duree" required>
+          </div>
+          <div class="form-group">
+            <label style="color:#219EBC;" for="bugdet">Bugdet</label>
+            <input type="number" ngModel name="bugdet" class="form-control" id="bugdet" placeholder="bugdet" required>
+          </div>
+          <div class="form-group">
+            <label style="color:#219EBC;" for="bugdet">Nombre participants</label>
+            <input type="number" ngModel name="nb" class="form-control" id="nb" placeholder="Nombre participants"
+              required>
+          </div>
+          <div class="form-group">
+            <label style="color:#219EBC;" for="type">Type</label>
+            <input type="text" ngModel name="type" class="form-control" id="type" placeholder="type" required>
+          </div>
+          <div class="form-group">
+            <label style="color:#219EBC;" for="domaine">Domaine</label>
+            <select [ngModel]="domaines" name="domaine" id="domaine" class="form-select"
+              aria-label="Default select example">
+
+              <option [ngValue]="domaine" *ngFor="let domaine of domaines" value="{{domaine?.id}}">
+                {{domaine?.libelle}}</option>
+
+            </select>
+          </div>
+          <br>
+
+
+
+
+
+          <div class="modal-footer">
+            <button type="button" id="add-pays-form" class="btn btn-secondary" style="background-color:#fb8500;"
+              data-dismiss="modal">Annuler</button>
+            <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary"
+              style="background-color:#219EBC;">Ajouter</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!--fin modal-->
+
+
+
+
+<!-- details model -->
+<div class="modal fade" id="detailsFormationModal" tabindex="-1" role="dialog" aria-labelledby="domaineEditModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      <h3 class="modal-title" style="color:#219EBC;" id="updateDomaineModalLabel">Details formation
+          {{editFormation?.titre}}</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       
+        <img src="/assets/f.png"  alt="image"  style="height: 10%;width: 25%;margin-left: 35%;" > 
+        <br><br>
+          <div class="form-group">
+            <b>
+              <h4 class="title1" for="nom" >Titre formation : </h4>
+            </b>
+            <b>
+              <h4 class="title2" for="nom" > &nbsp;{{editFormation?.titre}}</h4>
+            </b>
+          </div>
+          <hr>
+          <input type="hidden" ngModel="{{editFormation?.id}}" name="id" class="form-control" id="id" placeholder="id">
+
+          <div class="form-group">
+            <b>
+              <h2 class="title1" for="nom" >Année formation : </h2>
+            </b>
+            <b>
+              <h4 class="title2" for="nom" > &nbsp;{{editFormation?.annee}}</h4>
+            </b>
+
+          </div>
+          <hr>
+          <div class="form-group">
+         
+            <b>
+              <h4 class="title1" for="nom" >Nombre participants  : </h4>
+            </b>
+            <b>
+              <h4 class="title2" for="nom" > &nbsp;{{editFormation?.nb}}</h4>
+            </b>
+          </div>
+          <hr>
+          <div class="form-group">
+            <b>
+              <h4 class="title1" for="nom" >Durée formation  : </h4>
+            </b>
+            <b>
+              <h4 class="title2" for="nom" > &nbsp;{{editFormation?.duree}}</h4>
+            </b>
+                    </div>
+                    <hr>
+          <div class="form-group">
+            <b>
+              <h4 class="title1" for="nom" >Bugdet formation  : </h4>
+            </b>
+            <b>
+              <h4 class="title2" for="nom" > &nbsp;{{editFormation?.bugdet}}</h4>
+            </b>
+           
+
+          </div>
+          <hr>
+          <div class="form-group">
+            <b>
+              <h4 class="title1" for="nom" >Type formation  : </h4>
+            </b>
+            <b>
+              <h4 class="title2" for="nom"> &nbsp;{{editFormation?.type}}</h4>
+            </b>
+        
+
+          </div>
+          <hr>
+          <div class="form-group">
+            <b>
+              <h3 class="title1" for="nom" >Domaine formation  : </h3>
+            </b>
+            <b>
+              <h3 class="title2" for="nom" > &nbsp;{{editFormation?.domaine?.libelle}}</h3>
+            </b>
+   
+
+          </div>
+
+
+          <div class="modal-footer">
+            <button type="button" id="" data-dismiss="modal" class="btn btn-secondary"
+              style="background-color:#fb8500;">Fermer</button>
+
+          </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- edit model -->
+<div class="modal fade" id="updateFormationModal" tabindex="-1" role="dialog" aria-labelledby="domaineEditModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color:#219EBC;" id="updateDomaineModalLabel">Modifier formation
+          {{editFormation?.titre}}</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #editForm="ngForm">
+
+
+          <div class="form-group">
+            <label for="nom" style="color:#219EBC;">Titre formation</label>
+            <input type="text" ngModel="{{editFormation?.titre}}" name="titre" class="form-control" id="titre"
+              aria-describedby="emailHelp" placeholder="titre">
+          </div>
+          <input type="hidden" ngModel="{{editFormation?.id}}" name="id" class="form-control" id="id" placeholder="id">
+
+          <div class="form-group">
+            <label for="annee" style="color:#219EBC;">annee</label>
+            <input type="number" ngModel="{{editFormation?.annee}}" name="annee" class="form-control" id="annee"
+              placeholder="annee">
+          </div>
+
+          <div class="form-group">
+            <label for="nb" style="color:#219EBC;">Nombre participants</label>
+            <input type="number" ngModel="{{editFormation?.nb}}" name="nb" class="form-control" id="nb"
+              placeholder="Nombre participants">
+          </div>
+          <div class="form-group">
+            <label for="duree" style="color:#219EBC;">Duree</label>
+            <input type="number" ngModel="{{editFormation?.duree}}" name="duree" class="form-control" id="duree"
+              name="duree" placeholder="duree">
+          </div>
+          <div class="form-group">
+            <label for="bugdet" style="color:#219EBC;">Bugdet</label>
+            <input type="number" ngModel="{{editFormation?.bugdet}}" name="bugdet" class="form-control" id="bugdet"
+              placeholder="bugdet">
+          </div>
+
+          <div class="form-group">
+            <label for="type" style="color:#219EBC;">Type</label>
+            <input type="text" ngModel="{{editFormation?.type}}" name="type" class="form-control" id="type"
+              placeholder="type">
+          </div>
+          <div class="form-group">
+            <label for="organisme" style="color:#219EBC;">Domaine</label>
+            <select [ngModel]="domaines" name="domaine" id="domaine" class="form-select"
+              aria-label="Default select example">
+
+              <option [ngValue]="domaine" *ngFor="let domaine of domaines" value="{{domaine?.id}}">
+                {{domaine?.libelle}}</option>
+
+            </select>
+          </div>
+
+
+          <div class="modal-footer">
+            <button type="button" id="" data-dismiss="modal" class="btn btn-secondary"
+              style="background-color:#fb8500;">Annuler</button>
+            <button (click)="onUpdateFormation(editForm.value)" style="background-color:#219EBC;" data-dismiss="modal"
+              class="btn ">Modifier</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--delete-->
+<div class="modal fade" id="deleteFormationModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color:#219EBC;" id="deleteModelLabel">Supprimer formation</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Êtes-vous sûr de vouloir supprimer la formation {{deleteFormation?.titre}}?</p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" style="background-color:#219EBC;"
+            data-dismiss="modal">Annuler</button>
+          <button (click)="onDeleteFormation(deleteFormation?.id)" class="btn btn-danger"
+            style="background-color:#fb8500;" data-dismiss="modal">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

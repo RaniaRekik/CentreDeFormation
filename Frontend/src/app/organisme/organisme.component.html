@@ -1,0 +1,149 @@
+<div>
+  <div id="main-container">
+
+    <br>
+  </div>
+  <div class="divTable">
+    <button *ngIf="showAdminBoard" type="button" style="background-color:#FFB703;font-weight: bold;" class="btn" data-bs-toggle="modal"
+      data-bs-target="#exampleModal">
+      Ajouter une Organisme
+    </button>
+  </div>
+  <br><br>
+
+
+
+  <!--primfaces-->
+  <div class="divTable">
+    <p-table id="customers" [columns]="cols" [value]="organismes" sortMode="multiple" #dt [paginator]="true" [rows]="5">
+      <ng-template style="background-color: #8ECAE6;" pTemplate="caption">
+        <b style="color:#fb8500;font-weight: bold; font-size: 30px;">Liste des organisme</b>
+      </ng-template>
+
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th  scope="col" *ngFor="let col of columns" [pSortableColumn]="col.field">
+            {{col.header}}
+            <p-sortIcon style="color:#fb8500;" [field]="col.field"></p-sortIcon>
+          </th > <th *ngIf="showAdminBoard">Modifier
+          </th>
+          <th *ngIf="showAdminBoard">Supprimer </th>
+        </tr>
+
+        <tr>
+          <th *ngFor="let col of columns" [ngSwitch]="col.field">
+            <input pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+          </th>
+          <th *ngIf="showAdminBoard"  style="text-align:center" >
+          </th>
+          <th *ngIf="showAdminBoard" style="text-align:center" >
+            
+         </th>
+
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-organisme let-columns="columns">
+        <tr>
+          <td *ngFor="let col of columns">
+            {{organisme[col.field]}}
+          </td>
+          <td *ngIf="showAdminBoard" align="center">  
+            <a (click)="onOpenModal(organisme, 'edit')" style="background-color: #023047; text-align: center;
+          
+            justify-content: center;" class="btn  tooltips"    data-placement="top" data-original-title="Delete">  
+               <mat-icon class="icon">edit</mat-icon></a>
+              </td>
+          <td *ngIf="showAdminBoard" align="center">  
+            <a (click)="onOpenModal(organisme, 'delete')" style="background-color: #023047; text-align: center;
+          
+            justify-content: center;" class="btn  tooltips"    data-placement="top" data-original-title="Delete">  
+               <mat-icon class="icon">delete_forever</mat-icon></a>
+              </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" style="z-index: 999999999;" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" style="color:#219EBC;" id="exampleModalLabel">Ajouter une organisme</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <form #addForm="ngForm" (ngSubmit)="onAddOrganisme(addForm)">
+            <div class="form-group">
+              <b> <label for="libelle" style="color:#219EBC;">Nom Organisme</label></b>
+              <input type="text" ngModel name="libelle" class="form-control" id="libelle" placeholder="Organisme"
+                required>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="add-pays-form" class="btn btn-secondary" style="background-color:#fb8500;"
+                data-dismiss="modal">Close</button>
+              <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary"
+                style="background-color:#219EBC;">Save changes</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--fin modal-->
+
+<!-- edit model -->
+<div class="modal fade" id="updateOrganismeModal" tabindex="-1" role="dialog" aria-labelledby="domaineEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h3 class="modal-title"  style="color:#219EBC;"   id="updateDomaineModalLabel">Modifier organisme {{editOrganisme?.libelle}}</h3>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+           <form #editForm="ngForm">
+              <div class="form-group">
+                 <label style="color:#219EBC;"  for="libelle">Nom organisme</label>
+                 <input type="text" ngModel="{{editOrganisme?.libelle}}" name="libelle" class="form-control" id="libelle" aria-describedby="emailHelp" placeholder="libelle">
+              </div>
+              <input type="hidden" ngModel="{{editOrganisme?.id}}" name="id" class="form-control" id="id" placeholder="id">
+
+              <div class="modal-footer">
+                 <button type="button" id="" data-dismiss="modal" class="btn btn-secondary"  style="background-color:#fb8500;"  >Annuler</button>
+                 <button (click)="onUpdateOrganisme(editForm.value)"  style="background-color:#219EBC;"  data-dismiss="modal" class="btn " >Modifier</button>
+              </div>
+           </form>
+        </div>
+     </div>
+  </div>
+</div>
+
+  
+
+<!--delete-->
+<div class="modal fade" id="deleteOrganismeModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h3 class="modal-title"  style="color:#219EBC;"   id="deleteModelLabel">Supprimer organisme</h3>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+           <p>Êtes-vous sûr de vouloir supprimer l'organisme {{deleteOrganisme?.libelle}}?</p>
+           <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" style="background-color:#219EBC;"  data-dismiss="modal">Annuler</button>
+              <button (click)="onDeleteOrganisme(deleteOrganisme?.id)" class="btn btn-danger"   style="background-color:#fb8500;"  data-dismiss="modal">Supprimer</button>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>

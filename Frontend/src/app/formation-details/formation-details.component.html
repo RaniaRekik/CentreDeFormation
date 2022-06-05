@@ -1,0 +1,55 @@
+
+
+
+
+              
+<!--primfaces-->
+<div class="divTable">
+  <p-table  id="customers" [columns]="cols" [value]="sessions"   sortMode="multiple" #dt [paginator]="true" [rows]="5">
+    <ng-template  style="background-color: #8ECAE6;" pTemplate="caption">
+       <b  style="color:#ffb703;font-weight: bold; font-size: 30px;">Ajouter session à la formation </b>
+          </ng-template>
+  ffb703
+          <ng-template     pTemplate="header" let-columns>
+            <tr >
+                <th  scope="col" *ngFor="let col of columns"  [pSortableColumn]="col.field">
+                    {{col.header}}
+                    <p-sortIcon style="color:#ffb703;"  [field]="col.field"></p-sortIcon>
+                </th>
+                <th>Ajouter session
+                </th>
+              
+            </tr>
+  
+            <tr>
+              <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                  <input pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+              </th>
+              <th style="text-align:center" >
+            </th>
+            
+          </tr>
+               </ng-template>
+   
+  <ng-template pTemplate="body" let-session  let-columns="columns">
+      <tr>
+        <td *ngFor="let col of columns">
+          {{session[col.field]}}
+      </td>
+     
+     
+      <td align="center">  
+        <button    (click) = "addSessionToFormation(formationId, session);submitButton.disabled = true" #submitButton   style="background-color: #ffb703; text-align: center;
+          
+        justify-content: center;" class="btn  tooltips"    data-placement="top" data-original-title="Delete">  
+          	<mat-icon>playlist_add</mat-icon></button>
+          </td>
+         </tr>
+  </ng-template>
+  </p-table>
+  </div>
+
+
+
+
+

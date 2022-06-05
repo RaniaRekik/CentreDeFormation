@@ -1,0 +1,86 @@
+#customers {
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius:25px;
+    border-collapse: collapse;
+  
+    overflow: hidden;
+  
+    width: 100%;
+    margin-left: -10px;
+   
+  }
+  
+  ng-template {
+    box-shadow:  0 0 10px 5px rgba(0,0,0,0.6);
+  }
+
+
+  .content-table {
+    
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    min-width: 400px;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+  
+  }
+
+
+
+  #customers td {
+  
+    border: 1px solid grey;
+    border-width: 1px 0 ;
+    padding: 8px;
+  }
+
+
+#customers th {
+
+    border: 1px solid #FFFFFF;
+    padding: 8px;
+  }
+  
+/*   #customers tr:nth-child(even){background-color: #f2f2f2;} */
+tr { 
+
+    border: solid #04AA6D;
+    border-width: 1px 0 ;
+  }
+  
+  
+  #customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color:   #219EBC;
+    color: white;
+  }
+customers tr:nth-child(even){background-color: #f2f2f2;} 
+  
+  #customers tr:hover {background-color: #ddd;}
+  
+  
+  .btn {
+    color: #FFFFFF;
+    }
+
+    input[type=text]:focus {
+        border: 3px solid #219EBC;
+      }
+
+      .divTable {
+        margin-left: 120px;
+      
+        height: 100px;
+        width: 70%;
+     
+Display : inline-block;
+
+Position: absolute;
+      }
+
+      .icon{
+        color: #fb8500;
+      }
